@@ -753,43 +753,40 @@ jQuery(window).on('scroll', function () {
 /*===========================
 	Document on  Submit FUNCTION START
 ===========================*/
+ jQuery(document).on('submit', 'form.cons-contact-form', function(e) {
+  e.preventDefault();
 
-	jQuery(document).on('submit', 'form.cons-contact-form', function(e){
-    e.preventDefault();
-    $.ajax({
-      url: "contact-enquiry",
-      type: "POST",
-      data: new FormData(this),
-      processData: false,
-      contentType: false,
-      cache: false,
-      async: true,
-      beforeSend: function(){
-        //$(".loader").show();
-        $('#contact-btn').html("Please Wait...").attr('disabled', 'disabled');
-      },success: function(data){
-        if ($.trim(data) == "success") {
-          $("#contact-msg").html(
-            '<div class="alert alert-success text-center"><strong><i class="fa fa-check-square fa-lg"></i>&nbsp;&nbsp;Success! </strong>Your Enquiry has been Received, We will get back to you soon!!!</div>'
-            );
-          $("#contact-form")[0].reset();
-        }else{
-          $("#contact-msg").html(
-            '<div class="alert alert-danger text-center"><strong><i class="fa fa-remove fa-lg"></i>&nbsp;&nbsp;Failed! </strong>Error in sending your Enquiry! Please try again later.</div>'
-            );
-        }
-      }, error: function (xhr, status, errorThrown) {
-        $("#contact-msg").html(
-          '<div class="alert alert-danger text-center"><strong><i class="fa fa-remove fa-lg"></i>&nbsp;&nbsp;Failed! </strong>'+xhr.responseText+'</div>'
-          );
-      },complete:function(data){
-        //$(".loader").hide();
-        $('#contact-btn').html("<span>Submit Now</span><em></em>").attr("disabled", false);
-      }
-    });
-    return false;
-  });
+  // Initialize EmailJS
+  emailjs.init("XKFeCMgzmV_OEqdej");
 
+  const templateParams = {
+      user_name: $(this).find('input[name="name"]').val(),
+      user_email: $(this).find('input[name="email"]').val(),
+	  user_phone: $(this).find('input[name="phone"]').val(),
+      subject: $(this).find('input[name="subject"]').val(),
+      message: $(this).find('textarea[name="message"]').val(),
+  };
+
+  $('#contact-btn').html("Please Wait...").attr('disabled', 'disabled');
+
+  emailjs.send("service_9f7p31m", "template_4j3iq7p", templateParams)
+      .then(
+          function() {
+              $("#contact-msg").html(
+                  '<div class="alert alert-success text-center"><strong><i class="fa fa-check-square fa-lg"></i>  Success! </strong>Your Enquiry has been Received, We will get back to you soon!!!</div>'
+              );
+              $("form.cons-contact-form")[0].reset();
+          },
+          function(error) {
+              $("#contact-msg").html(
+                  '<div class="alert alert-danger text-center"><strong><i class="fa fa-remove fa-lg"></i>  Failed! </strong>Error in sending your Enquiry! Please try again later.</div>'
+              );
+          }
+      )
+      .finally(function() {
+          $('#contact-btn').html("<span>Submit Now</span><em></em>").attr("disabled", false);
+      });
+});
 /*===========================
 	Document on  Submit FUNCTION END
 ===========================*/	

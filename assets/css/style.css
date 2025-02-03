@@ -8764,18 +8764,19 @@ ol.comment-list li.comment .comment-respond .comment-form p {
     display: none;
   }
 }
-
 .slide-top {
-  animation: slide-top 2s cubic-bezier(0.55, 0.085, 0.68, 0.53) infinite
+  animation: slide-top 4s cubic-bezier(0.55, 0.085, 0.68, 0.53) infinite
     alternate-reverse both;
 }
 
 @keyframes slide-top {
   0% {
     transform: translateY(0);
+    transition-timing-function: ease-out;
   }
   100% {
-    transform: translateY(-50px);
+    transform: translateY(-60px);
+    transition-timing-function: ease-in;
   }
 }
 
@@ -8796,18 +8797,23 @@ ol.comment-list li.comment .comment-respond .comment-form p {
 }
 
 .up-down {
-  animation: slide-top 1.5s ease-in-out infinite alternate-reverse both;
+  animation: slide-top-fast 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-@keyframes slide-top {
+@keyframes slide-top-fast {
   0% {
     transform: translateY(0);
+    animation-timing-function: ease-out;
+  }
+  50% {
+    transform: translateY(-60px);
+    animation-timing-function: ease-out;
   }
   100% {
-    transform: translateY(-20px);
+    transform: translateY(0);
+    animation-timing-function: ease-in;
   }
 }
-
 /* Shine Animation*/
 .shine-effect .shine-box {
   position: relative;

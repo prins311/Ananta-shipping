@@ -11,7 +11,7 @@
                 eval(
                     "window[randomId]=function(){var axis=0;var e=window.scrollElements." +
                         randomId +
-                        ';e.current -= 1;if (e.direction == "h") axis ="0" - e.current + "px 0";else if (e.direction == "v") axis = "0 " + e.current + "px";else if (e.direction == "d") axis = e.current + "px " + e.current + "px";$( e ).css("background-position", axis);}'
+                        ';e.current += 1;if (e.direction == "h") axis ="0" - e.current + "px 0";else if (e.direction == "v") axis = "0 " + e.current + "px";else if (e.direction == "d") axis = e.current + "px " + e.current + "px";$( e ).css("background-position", axis);}'
                 ),
                 setInterval("window." + randomId + "()", options.scrollSpeed ? options.scrollSpeed : 70);
         }

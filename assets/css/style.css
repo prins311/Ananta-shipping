@@ -8429,6 +8429,7 @@ ol.comment-list li.comment .comment-respond .comment-form p {
 @media (max-width: 640px) {
   .twm-slider1-wrap .h-bnr-r-inner .h-bnr-media img {
     left: 0px;
+    top: 10px;
   }
 }
 

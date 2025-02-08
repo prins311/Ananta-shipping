@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&amp;display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&amp;display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Sacramento&amp;display=swap");
-/*===GENERAL===*/
+
 .site-text-primary {
   color: #ff8a00;
 }
@@ -205,7 +205,7 @@ h6 {
   text-align: justify;
 }
 
-/*===Listing Style===*/
+
 dl,
 ul,
 ol {
@@ -474,7 +474,7 @@ ol li {
   padding-top: 150px;
 }
 
-/*---Padding (bottom)---*/
+
 .p-b0 {
   padding-bottom: 0px;
 }
@@ -693,7 +693,6 @@ ol li {
   padding-right: 150px;
 }
 
-/*---Padding (left right)---*/
 .p-lr0 {
   padding-left: 0px;
   padding-right: 0px;
@@ -769,7 +768,6 @@ ol li {
   padding-right: 150px;
 }
 
-/*---Padding (top bottom)---*/
 .p-tb0 {
   padding-bottom: 0px;
   padding-top: 0px;

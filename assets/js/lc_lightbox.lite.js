@@ -1,33 +1,21 @@
-/**
-  * LC Lightbox - LITE
-  * yet.. another jQuery lightbox.. or not?
-  *
-  * @version	: 	1.2.9
-  * @copyright	:	Luca Montanari aka LCweb
-  * @website	:	https://lcweb.it
-  * @requires	:	jQuery v1.7 or later
-  
-  * Released under the MIT license
-  */
- 
+
 (function ($) {
-	lcl_objs 		= []; // array containing all initialized objects - useful for deeplinks
+	lcl_objs 		= []; 
 	
-	lcl_shown 		= false; // know whether lightbox is shown
-	lcl_is_active 	= false; // true when lightbox systems are acting (disable triggers)
-	lcl_slideshow	= undefined; // lightbox slideshow - setInterval object
+	lcl_shown 		= false;
+	lcl_is_active 	= false; 
+	lcl_slideshow	= undefined;
 	lcl_on_mobile	= /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 		
-	// static vars avoiding useless parameters usage - related to currently opened lightbox - otherwise they are empty
-	lcl_curr_obj	= false; // store currently active object 
-	lcl_curr_opts 	= false; // currently active instance settings
-	lcl_curr_vars 	= false; // currently active instance settings
+	lcl_curr_obj	= false; 
+	lcl_curr_opts 	= false; 
+	lcl_curr_vars 	= false;
 	
-	lcl_deeplink_tracked= false; // flag to track url changes and initial reading once
-	lcl_hashless_url	= false; // page URL without eventual hashes
-	lcl_url_hash		= ''; // URL hashtag
+	lcl_deeplink_tracked= false; 
+	lcl_hashless_url	= false; 
+	lcl_url_hash		= ''; 
 	
-	// lightbox structure
+
 	var lb_code =
 	'<div id="lcl_wrap" class="lcl_pre_show lcl_pre_first_el lcl_first_sizing lcl_is_resizing">'+
 		'<div id="lcl_window">'+
@@ -58,16 +46,8 @@
 		'<div id="lcl_overlay"></div>'+
 	'</div>';
 	
-	
-	////////////////////////////////////////////////////////////////////
-	
-	
-	// initialization
-	// obj can be an array and overrides elements / [src: url/selector (only required data), title: (string), txt: (string), author: (string), ajax: bool, type: image/frame/text] 
 	lc_lightbox = function(obj, lcl_settings) {
 		if(typeof(obj) != 'string' && (typeof(obj) != 'object' || !obj.length)) {return false;}
-
-		// check among already initialized 
 		var already_init = false;
 		$.each(lcl_objs, function(i, v) {
 			if(JSON.stringify(v) == JSON.stringify(obj)) {
@@ -85,9 +65,7 @@
 		return already_init;
 	};	
 	
-	
-	
-	// destruct method
+
 	lcl_destroy = function(instance) {
 		var index = $.inArray(instance, lcl_objs);
 		
@@ -96,73 +74,67 @@
 		}
 	};
 	
-	
-	////////////////////////////////////////////////////////////////////
-	
-
-	/* initialize */
 	var lcl = function(obj, settings) {
 
 		var lcl_settings = $.extend({
-			gallery			: true, // whether to display a single element or compose a gallery
-			gallery_hook	: 'rel', // attribute grouping elements - use false to create a gallery with all fetched elements 
-			live_elements	: true, // if a selector is found, set true to handle automatically DOM changes
-			preload_all		: false, // whether to preload all images on document ready
+			gallery			: true, 
+			gallery_hook	: 'rel',
+			live_elements	: true, 
+			preload_all		: false, 
 			global_type		: 'image',
 
-			src_attr		: 'href', // attribute containing element's source
-			title_attr		: 'title', // attribute containing the title - is possible to specify a selector with this syntax: "> .selector" or "> span" 
-			txt_attr		: 'data-lcl-txt', // attribute containing the description - is possible to specify a selector with this syntax: "> .selector" or "> span" 
-			author_attr		: 'data-lcl-author', // attribute containing the author - is possible to specify a selector with this syntax: "> .selector" or "> span" 
+			src_attr		: 'href', 
+			title_attr		: 'title',
+			txt_attr		: 'data-lcl-txt', 
+			author_attr		: 'data-lcl-author', 
+			slideshow		: true, 
+			open_close_time	: 400, 
+			ol_time_diff	: 100, 
+			fading_time		: 80, 
+			animation_time	: 250, 
+			slideshow_time	: 6000, 
+			autoplay		: false, 
+			counter			: false, 
+			progressbar		: true, 
+			carousel 		: true, 
 			
-			slideshow		: true, // whether to enable slideshow
-			open_close_time	: 400, // animation duration for lightbox opening and closing / 1000 = 1sec
-			ol_time_diff	: 100, // overlay's animation advance (on opening) and delay (on close) to window / 1000 = sec
-			fading_time		: 80, // elements fading animation duration in millisecods / 1000 = 1sec
-			animation_time	: 250, // sizing animation duration in millisecods / 1000 = 1sec
-			slideshow_time	: 6000, // slideshow interval duration in milliseconds / 1000 = 1sec
-			autoplay		: false, // autoplay slideshow - bool
-			counter			: false, // whether to display elements counter
-			progressbar		: true, // whether to display a progressbar when slideshow runs
-			carousel 		: true, // whether to create a non-stop pagination cycling elements
+			max_width		: '93%', 
+			max_height		: '93%', 
+			wrap_padding	: false, 
+			ol_opacity		: 0.7, 
+			ol_color		: '#111', 
+			ol_pattern		: false, 
+			border_w		: 0, 
+			border_col		: '#ddd', 
+			padding			: 0, 
+			radius			: 0, 
+			shadow			: true, 
+			remove_scrollbar: true, 
 			
-			max_width		: '93%', // Lightbox maximum width. Use a responsive percent value or an integer for static pixel value
-			max_height		: '93%', // Lightbox maximum height. Use a responsive percent value or an integer for static pixel value
-			wrap_padding	: false, // set lightbox wrapping padding. Useful to maintain spaces using px max-sizes. Use a CSS value (string)
-			ol_opacity		: 0.7, // overlay opacity / value between 0 and 1
-			ol_color		: '#111', // background color of the overlay
-			ol_pattern		: false, // overlay patterns - insert the pattern name or false
-			border_w		: 0, // width of the lightbox border in pixels 
-			border_col		: '#ddd', // color of the lightbox border
-			padding			: 0, // width of the lightbox padding in pixels
-			radius			: 0, // lightbox border radius in pixels 
-			shadow			: true, // whether to apply a shadow around lightbox window
-			remove_scrollbar: true, // whether to hide page's vertical scroller
-			
-			wrap_class		: '', // custom classes added to wrapper - for custom styling/tracking
-			skin			: 'light', // light / dark / custom
-			data_position	: 'over', // over / under / lside / rside	
-			cmd_position	: 'inner', // inner / outer	
-			ins_close_pos	: 'normal', // set closing button position for inner commands - normal/corner	
-			nav_btn_pos		: 'normal', // set arrows and play/pause position - normal/middle
+			wrap_class		: '', 
+			skin			: 'light',
+			data_position	: 'over', 	
+			cmd_position	: 'inner', 	
+			ins_close_pos	: 'normal', 	
+			nav_btn_pos		: 'normal', 
 	
-			txt_hidden		: 500, // whether to hide texts on lightbox opening - bool or int (related to browser's smaller side)
-			show_title		: true, // bool / whether to display titles
-			show_descr		: true, // bool / whether to display descriptions
-			show_author		: true, // bool / whether to display authors
+			txt_hidden		: 500, 
+			show_title		: true, 
+			show_descr		: true, 
+			show_author		: true, 
 			
-			thumbs_nav		: true, // enables thumbnails navigation (requires elements poster or images)
-			tn_icons		: true, // print type icons on thumbs if types are mixed
-			tn_hidden		: 500, // whether to hide thumbs nav on lightbox opening - bool or int (related to browser's smaller side)
-			thumbs_w		: 110, // width of the thumbs for the standard lightbox
-			thumbs_h		: 110, // height of the thumbs for the standard lightbox
-			thumb_attr		: false, // attribute containing thumb URL to use or false to use thumbs maker
-			thumbs_maker_url: false, // script baseurl to create thumbnails (use src=%URL% w=%W% h=%H%)
+			thumbs_nav		: true, 
+			tn_icons		: true, 
+			tn_hidden		: 500, 
+			thumbs_w		: 110, 
+			thumbs_h		: 110, 
+			thumb_attr		: false, 
+			thumbs_maker_url: false, 
 			
-			fullscreen		: false, // Allow the user to expand a resized image. true/false
-			fs_img_behavior	: 'fit', // resize mode of the fullscreen image - smart/fit/fill
-			fs_only			: 500, // when directly open in fullscreen mode - bool or int (related to browser's smaller side)
-			browser_fs_mode : true, // whether to trigger or nor browser fullscreen mode
+			fullscreen		: false, 
+			fs_img_behavior	: 'fit', 
+			fs_only			: 500, 
+			browser_fs_mode : true, 
 			
 			socials			: false, // bool
 			fb_share_params	: false, // bool/string / whether to use direct FB contents share (Read the doc to know what to use) 
